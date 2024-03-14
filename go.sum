@@ -1,4 +1,4 @@
-github.com/reiver/go-ext2mime v0.0.0-20240314001411-5222f78d945e h1:5EKH/Z+spCPAj3RegqJLwsCXDZpyplPJ2KtiucFvY+o=
-github.com/reiver/go-ext2mime v0.0.0-20240314001411-5222f78d945e/go.mod h1:svqmVz/v/JD3v358s8sZ0zAgKgYN9lyhpa++G8t9D+k=
+github.com/reiver/go-ext2mime v0.0.0-20240314112811-0caebebd631d h1:LRTosQAdYuakL+38+Bt5eUTCvZFT0TcrwXwQZgohifg=
+github.com/reiver/go-ext2mime v0.0.0-20240314112811-0caebebd631d/go.mod h1:svqmVz/v/JD3v358s8sZ0zAgKgYN9lyhpa++G8t9D+k=
 github.com/reiver/go-path v0.0.0-20240228195003-c9685181c3a3 h1:DPQhDR81e5ddqK0JuJ9JsFb7ermbo3t+ynj7OsCMcXM=
 github.com/reiver/go-path v0.0.0-20240228195003-c9685181c3a3/go.mod h1:4H3fxXTRSuvWviraF1tFTVXhRciV8KFGq5tzo1gb2Tk=
