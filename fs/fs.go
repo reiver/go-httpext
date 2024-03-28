@@ -3,6 +3,8 @@ package httpextfs
 import (
 	"errors"
 	"io/fs"
+
+	"github.com/reiver/go-path"
 )
 
 var (
@@ -59,6 +61,11 @@ func (receiver internalFS) Open(name string) (fs.File, error) {
 	var filesystem fs.FS = receiver.filesystem
 	if nil == filesystem {
 		return nil, errNilFileSystem
+	}
+
+	if "" != path.Ext(name) {
+		var fsname string = fsName(name, "", "")
+		return filesystem.Open(fsname)
 	}
 
 	var defaultExtensions []string = receiver.defaultExtensions
