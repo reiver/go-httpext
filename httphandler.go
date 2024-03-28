@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	"github.com/reiver/go-ext2mime"
+	"github.com/reiver/go-path"
 
 	"github.com/reiver/go-httpext/fs"
 )
@@ -112,7 +113,8 @@ func (receiver internalHTTPHandler) ServeHTTP(responseWriter http.ResponseWriter
 		}
 	}
 
-	{
+
+	if "" == path.Ext(httpRequestPath) {
 		var interpreters map[string]Interpreter = receiver.interpreters
 		if nil != interpreters {
 
