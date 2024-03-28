@@ -6,13 +6,13 @@ import (
 )
 
 var (
-	errDefaultsTooShort = errors.New("httpext: defaults too short")
-	errNilFileSystem    = errors.New("httpext: nil file-system")
+	errDefaultExtensionsTooShort = errors.New("httpext: default extensions too short")
+	errNilFileSystem = errors.New("httpext: nil file-system")
 )
 
-// FS returns a fs.FS that wraps 'filesystem' making it so that it can handle paths from an HTTP request.
+// FS returns an fs.FS that wraps 'filesystem' making it so that it can handle paths from an HTTP request.
 //
-// If 'defaults' is "index.html", then behind the scenes, it does these conversions:
+// If 'defaultStem' is "index" and 'defaultExtensions' is []string{".html"}, then behind the scenes, it does these conversions:
 //
 //	"/" -> "index.html"
 //
@@ -24,7 +24,7 @@ var (
 //
 //	"/img/photo.jpeg" -> "img/photo.jpeg"
 //
-// If 'defaults' is "img.png", then behind the scenes, it does these conversions:
+// If 'defaultStem' is "img" and 'defaultExtensions' is []string{".png"}, then behind the scenes, it does these conversions:
 //
 //	"/" -> "img.png"
 //
@@ -37,20 +37,22 @@ var (
 //	"/img/photo.jpeg" -> "img/photo.jpeg"
 //
 // If 'defaultFileName' is the empty string (i.e., "") then it defaults to "webpage.html".
-func FS(filesystem fs.FS, defaults ...string) fs.FS {
-	if len(defaults) < 2 {
+func FS(filesystem fs.FS, defaultStem string, defaultExtensions ...string) fs.FS {
+	if len(defaultExtensions) < 1 {
 		return nil
 	}
 
 	return internalFS{
 		filesystem:filesystem,
-		defaults:defaults,
+		defaultStem:defaultStem,
+		defaultExtensions:defaultExtensions,
 	}
 }
 
 type internalFS struct {
 	filesystem fs.FS
-	defaults []string
+	defaultStem string
+	defaultExtensions []string
 }
 
 func (receiver internalFS) Open(name string) (fs.File, error) {
@@ -59,15 +61,15 @@ func (receiver internalFS) Open(name string) (fs.File, error) {
 		return nil, errNilFileSystem
 	}
 
-	var defaults []string = receiver.defaults
-	if len(defaults) < 2 {
-		return nil, errDefaultsTooShort
+	var defaultExtensions []string = receiver.defaultExtensions
+	if len(defaultExtensions) < 1 {
+		return nil, errDefaultExtensionsTooShort
 	}
 
 	{
-		var defaultStem string  = defaults[0]
+		var defaultStem string  = receiver.defaultStem
 
-		for _, defaultExtension := range defaults[1:]  {
+		for _, defaultExtension := range defaultExtensions  {
 			var fsname string = fsName(name, defaultStem, defaultExtension)
 			file, err := filesystem.Open(fsname)
 			if errors.Is(err, fs.ErrNotExist) {
