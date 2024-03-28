@@ -8,7 +8,6 @@ import (
 	"net/url"
 
 	"github.com/reiver/go-ext2mime"
-	"github.com/reiver/go-path"
 
 	"github.com/reiver/go-httpext/fs"
 )
@@ -22,20 +21,40 @@ const (
 var statusTextNotFound            string = http.StatusText(http.StatusNotFound)
 var statusTextInternalServerError string = http.StatusText(http.StatusInternalServerError)
 
-func HTTPHandler(filesystem fs.FS) http.Handler {
+func HTTPHandler(filesystem fs.FS, interpreters ...Interpreter) http.Handler {
 	if nil == filesystem {
 		return nil
 	}
 
-	filesystem = httpextfs.FS(filesystem, defaultWebPageStem, defaultWebPageExtension)
+	var extensions []string = []string{defaultWebPageExtension}
+
+	var interpretersMap map[string]Interpreter = make(map[string]Interpreter)
+	for _, interpreter := range interpreters {
+		if nil == interpreter {
+			continue
+		}
+
+		var ext string = interpreter.InterpreterExtension()
+		if "" == ext {
+			continue
+		}
+
+		interpretersMap[ext] = interpreter
+
+		extensions = append(extensions, ext)
+	}
+
+	filesystem = httpextfs.FS(filesystem, defaultWebPageStem, extensions...)
 
 	return internalHTTPHandler{
 		filesystem:filesystem,
+		interpreters:interpretersMap,
 	}
 }
 
 type internalHTTPHandler struct {
 	filesystem fs.FS
+	interpreters map[string]Interpreter
 }
 
 func (receiver internalHTTPHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
@@ -82,25 +101,46 @@ func (receiver internalHTTPHandler) ServeHTTP(responseWriter http.ResponseWriter
 		defer file.Close()
 	}
 
-	var filename string
+	var fileextension string
 	{
-		var fileinfo fs.FileInfo
 		var err error
 
-		fileinfo, err = file.Stat()
+		fileextension, err = fileExt(file)
 		if nil != err {
 			http.Error(responseWriter, statusTextInternalServerError, http.StatusInternalServerError)
 			return
 		}
-		if nil == fileinfo {
-			http.Error(responseWriter, statusTextInternalServerError, http.StatusInternalServerError)
-			return
-		}
-
-		filename = fileinfo.Name()
 	}
 
-	var fileextension string = path.Ext(filename)
+	{
+		var interpreters map[string]Interpreter = receiver.interpreters
+		if nil != interpreters {
+
+			var interpreter Interpreter
+			var found bool
+
+			interpreter, found = interpreters[fileextension]
+			if found {
+				var newfile fs.File = interpreter.InterpretFile(file)
+				if nil == newfile {
+					http.Error(responseWriter, statusTextInternalServerError, http.StatusInternalServerError)
+					return
+				}
+
+				file = newfile
+			}
+		}
+
+		{
+			var err error
+
+			fileextension, err = fileExt(file)
+			if nil != err {
+				http.Error(responseWriter, statusTextInternalServerError, http.StatusInternalServerError)
+				return
+			}
+		}
+	}
 
 	{
 		var contenttype string
