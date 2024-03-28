@@ -8,37 +8,44 @@ func TestFSName(t *testing.T) {
 
 	tests := []struct{
 		HTTPPath string
-		DefaultFileName string
+		DefaultStem string
+		DefaultExtension string
 		Expected string
 	}{
 		{
 			HTTPPath: "",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "webpage.html",
 		},
 		{
 			HTTPPath: "/",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "webpage.html",
 		},
 		{
 			HTTPPath: ".",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "webpage.html",
 		},
 		{
 			HTTPPath: "./",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "webpage.html",
 		},
 		{
 			HTTPPath: "../",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "webpage.html",
 		},
 		{
 			HTTPPath: "../../",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "webpage.html",
 		},
 
@@ -46,27 +53,32 @@ func TestFSName(t *testing.T) {
 
 		{
 			HTTPPath: "robots.txt",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "robots.txt",
 		},
 		{
 			HTTPPath: "/robots.txt",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "robots.txt",
 		},
 		{
 			HTTPPath: "./robots.txt",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "robots.txt",
 		},
 		{
 			HTTPPath: "../robots.txt",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "robots.txt",
 		},
 		{
 			HTTPPath: "../../robots.txt",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "robots.txt",
 		},
 
@@ -74,27 +86,32 @@ func TestFSName(t *testing.T) {
 
 		{
 			HTTPPath: "2024/03/13/post",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/post.html",
 		},
 		{
 			HTTPPath: "/2024/03/13/post",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/post.html",
 		},
 		{
 			HTTPPath: "./2024/03/13/post",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/post.html",
 		},
 		{
 			HTTPPath: "../2024/03/13/post",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/post.html",
 		},
 		{
 			HTTPPath: "../../2024/03/13/post",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/post.html",
 		},
 
@@ -102,27 +119,32 @@ func TestFSName(t *testing.T) {
 
 		{
 			HTTPPath: "2024/03/13/photo.jpeg",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/photo.jpeg",
 		},
 		{
 			HTTPPath: "/2024/03/13/photo.jpeg",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/photo.jpeg",
 		},
 		{
 			HTTPPath: "./2024/03/13/photo.jpeg",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/photo.jpeg",
 		},
 		{
 			HTTPPath: "../2024/03/13/photo.jpeg",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/photo.jpeg",
 		},
 		{
 			HTTPPath: "../../2024/03/13/photo.jpeg",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/photo.jpeg",
 		},
 
@@ -130,27 +152,32 @@ func TestFSName(t *testing.T) {
 
 		{
 			HTTPPath: "2024/03/13/",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/webpage.html",
 		},
 		{
 			HTTPPath: "/2024/03/13/",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/webpage.html",
 		},
 		{
 			HTTPPath: "./2024/03/13/",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/webpage.html",
 		},
 		{
 			HTTPPath: "../2024/03/13/",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/webpage.html",
 		},
 		{
 			HTTPPath: "../../2024/03/13/",
-			DefaultFileName: "",
+			DefaultStem: "",
+			DefaultExtension: "",
 			Expected: "2024/03/13/webpage.html",
 		},
 
@@ -158,27 +185,32 @@ func TestFSName(t *testing.T) {
 
 		{
 			HTTPPath: "2024/03/13/",
-			DefaultFileName: "index.html",
+			DefaultStem: "index",
+			DefaultExtension: ".html",
 			Expected: "2024/03/13/index.html",
 		},
 		{
 			HTTPPath: "/2024/03/13/",
-			DefaultFileName: "index.html",
+			DefaultStem: "index",
+			DefaultExtension: ".html",
 			Expected: "2024/03/13/index.html",
 		},
 		{
 			HTTPPath: "./2024/03/13/",
-			DefaultFileName: "index.html",
+			DefaultStem: "index",
+			DefaultExtension: ".html",
 			Expected: "2024/03/13/index.html",
 		},
 		{
 			HTTPPath: "../2024/03/13/",
-			DefaultFileName: "index.html",
+			DefaultStem: "index",
+			DefaultExtension: ".html",
 			Expected: "2024/03/13/index.html",
 		},
 		{
 			HTTPPath: "../../2024/03/13/",
-			DefaultFileName: "index.html",
+			DefaultStem: "index",
+			DefaultExtension: ".html",
 			Expected: "2024/03/13/index.html",
 		},
 
@@ -186,34 +218,39 @@ func TestFSName(t *testing.T) {
 
 		{
 			HTTPPath: "2024/03/13/",
-			DefaultFileName: "meme.gif",
+			DefaultStem: "meme",
+			DefaultExtension: ".gif",
 			Expected: "2024/03/13/meme.gif",
 		},
 		{
 			HTTPPath: "/2024/03/13/",
-			DefaultFileName: "meme.gif",
+			DefaultStem: "meme",
+			DefaultExtension: ".gif",
 			Expected: "2024/03/13/meme.gif",
 		},
 		{
 			HTTPPath: "./2024/03/13/",
-			DefaultFileName: "meme.gif",
+			DefaultStem: "meme",
+			DefaultExtension: ".gif",
 			Expected: "2024/03/13/meme.gif",
 		},
 		{
 			HTTPPath: "../2024/03/13/",
-			DefaultFileName: "meme.gif",
+			DefaultStem: "meme",
+			DefaultExtension: ".gif",
 			Expected: "2024/03/13/meme.gif",
 		},
 		{
 			HTTPPath: "../../2024/03/13/",
-			DefaultFileName: "meme.gif",
+			DefaultStem: "meme",
+			DefaultExtension: ".gif",
 			Expected: "2024/03/13/meme.gif",
 		},
 	}
 
 	for testNumber, test := range tests {
 
-		actual := fsName(test.HTTPPath, test.DefaultFileName)
+		actual := fsName(test.HTTPPath, test.DefaultStem, test.DefaultExtension)
 
 		expected := test.Expected
 
@@ -222,7 +259,7 @@ func TestFSName(t *testing.T) {
 			t.Logf("EXPECTED (FS-PATH): %q", expected)
 			t.Logf("ACTUAL   (FS-PATH): %q", actual)
 			t.Logf("HTTP-PATH: %q", test.HTTPPath)
-			t.Logf("DEFAULT-FILE-NAME: %q", test.DefaultFileName)
+			t.Logf("DEFAULT-FILE-NAME: %q", test.DefaultStem)
 			continue
 		}
 	}

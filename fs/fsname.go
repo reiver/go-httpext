@@ -4,14 +4,20 @@ import (
 	"github.com/reiver/go-path"
 )
 
-const  defaultWebPageFileName string = "webpage.html"
+const  defaultWebPageStem      string = "webpage"
+const  defaultWebPageExtension string = ".html"
 
-func fsName(name string, defaultFileName string) string {
+func fsName(name string, defaultStem string, defaultExtension string) string {
 	name = path.Canonical("/" + name)
 
-	if "" == defaultFileName {
-		defaultFileName = defaultWebPageFileName
+	if "" == defaultStem {
+		defaultStem = defaultWebPageStem
 	}
+	if "" == defaultExtension {
+		defaultExtension = defaultWebPageExtension
+	}
+
+	var defaultFileName string = defaultStem + defaultExtension
 
 	{
 		var last int = len(name) - 1
@@ -28,7 +34,7 @@ func fsName(name string, defaultFileName string) string {
 	{
 		var fileextension string = path.Ext(name)
 		if "" == fileextension {
-			name += ".html"
+			name += defaultExtension
 		}
 	}
 

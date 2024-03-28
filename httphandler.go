@@ -15,7 +15,8 @@ import (
 
 const (
 	defaultContentType = "application/octet-stream"
-	defaultWebPageFileName = "webpage.html"
+	defaultWebPageStem = "webpage"
+	defaultWebPageExtension = ".html"
 )
 
 var statusTextNotFound            string = http.StatusText(http.StatusNotFound)
@@ -26,7 +27,7 @@ func HTTPHandler(filesystem fs.FS) http.Handler {
 		return nil
 	}
 
-	filesystem = httpextfs.FS(filesystem, defaultWebPageFileName)
+	filesystem = httpextfs.FS(filesystem, defaultWebPageStem, defaultWebPageExtension)
 
 	return internalHTTPHandler{
 		filesystem:filesystem,

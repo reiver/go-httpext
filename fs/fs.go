@@ -6,12 +6,13 @@ import (
 )
 
 var (
-	errNilFileSystem = errors.New("httpext: nil file-system")
+	errDefaultsTooShort = errors.New("httpext: defaults too short")
+	errNilFileSystem    = errors.New("httpext: nil file-system")
 )
 
 // FS returns a fs.FS that wraps 'filesystem' making it so that it can handle paths from an HTTP request.
 //
-// If 'defaultFileName' is "index.html", then behind the scenes, it does these conversions:
+// If 'defaults' is "index.html", then behind the scenes, it does these conversions:
 //
 //	"/" -> "index.html"
 //
@@ -23,7 +24,7 @@ var (
 //
 //	"/img/photo.jpeg" -> "img/photo.jpeg"
 //
-// If 'defaultFileName' is "img.png", then behind the scenes, it does these conversions:
+// If 'defaults' is "img.png", then behind the scenes, it does these conversions:
 //
 //	"/" -> "img.png"
 //
@@ -36,16 +37,20 @@ var (
 //	"/img/photo.jpeg" -> "img/photo.jpeg"
 //
 // If 'defaultFileName' is the empty string (i.e., "") then it defaults to "webpage.html".
-func FS(filesystem fs.FS, defaultFileName string) fs.FS {
+func FS(filesystem fs.FS, defaults ...string) fs.FS {
+	if len(defaults) < 2 {
+		return nil
+	}
+
 	return internalFS{
 		filesystem:filesystem,
-		defaultFileName:defaultFileName,
+		defaults:defaults,
 	}
 }
 
 type internalFS struct {
 	filesystem fs.FS
-	defaultFileName string
+	defaults []string
 }
 
 func (receiver internalFS) Open(name string) (fs.File, error) {
@@ -54,9 +59,22 @@ func (receiver internalFS) Open(name string) (fs.File, error) {
 		return nil, errNilFileSystem
 	}
 
-	var defaultFileName string = receiver.defaultFileName
+	var defaults []string = receiver.defaults
+	if len(defaults) < 2 {
+		return nil, errDefaultsTooShort
+	}
 
-	var fsname string = fsName(name, defaultFileName)
+	{
+		var defaultStem string  = defaults[0]
 
-	return filesystem.Open(fsname)
+		for _, defaultExtension := range defaults[1:]  {
+			var fsname string = fsName(name, defaultStem, defaultExtension)
+			file, err := filesystem.Open(fsname)
+			if errors.Is(err, fs.ErrNotExist) {
+				continue
+			}
+			return file, err
+		}
+		return nil, fs.ErrNotExist
+	}
 }
